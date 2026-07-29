@@ -348,6 +348,7 @@ main {
 }
 .chip:hover { border-color: var(--blue); color: var(--blue); }
 .chip-active { background: rgba(88, 166, 255, 0.15); border-color: var(--blue); color: var(--blue); }
+.chip-grouped { background: rgba(88, 166, 255, 0.06); border-color: var(--blue); border-style: dashed; color: var(--blue); opacity: 0.75; }
 
 .commit.dim { opacity: 0.25; filter: grayscale(0.6); }
 .commit.dim .node { border-color: var(--text-faint); box-shadow: none; }

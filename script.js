@@ -18,6 +18,20 @@ function el(tag, className, html) {
 
 const activeFilters = new Set();
 
+// Broad families of related tags — selecting one member matches commits/
+// skills tagged with any other member (e.g. "AWS EC2" also surfaces "AWS
+// Lambda", "S3", "DynamoDB" ... since they're all AWS services).
+const SKILL_GROUPS = [
+  { key: "aws", pattern: /\b(aws|ec2|ecs|lambda|fargate|emr|glue|kms|s3|redshift|sns|sqs|dynamodb|rds)\b/i },
+  { key: "dotnet", pattern: /\.net/i },
+  { key: "gcp", pattern: /\b(gcp|gke|google cloud)\b/i },
+];
+
+function matchKeysFor(skill) {
+  const keys = SKILL_GROUPS.filter((g) => g.pattern.test(skill)).map((g) => g.key);
+  return keys.length ? keys : [`solo:${skill.toLowerCase()}`];
+}
+
 function toolChip(tool) {
   const chip = el("button", "chip", tool);
   chip.type = "button";
@@ -31,7 +45,7 @@ function toolChip(tool) {
 function renderCommit(entry, kind) {
   const hash = hashOf(entry.id + entry.company);
   const row = el("article", "commit");
-  row.dataset.tools = entry.tools.join("|").toLowerCase();
+  row.dataset.matchKeys = [...new Set(entry.tools.flatMap(matchKeysFor))].join("|");
   row.dataset.id = entry.id;
 
   const graphCol = el("div", "commit-graph");
@@ -126,9 +140,10 @@ function buildSkillBranchMap() {
   const add = (entries, branch) => {
     entries.forEach((entry) => {
       (entry.tools || []).forEach((t) => {
-        const key = t.toLowerCase();
-        if (!map[key]) map[key] = new Set();
-        map[key].add(branch);
+        matchKeysFor(t).forEach((key) => {
+          if (!map[key]) map[key] = new Set();
+          map[key].add(branch);
+        });
       });
     });
   };
@@ -158,8 +173,10 @@ function activateBranch(branchKey) {
 function branchesForFilters() {
   const branches = new Set();
   activeFilters.forEach((tool) => {
-    const m = skillBranchMap[tool.toLowerCase()];
-    if (m) m.forEach((b) => branches.add(b));
+    matchKeysFor(tool).forEach((key) => {
+      const m = skillBranchMap[key];
+      if (m) m.forEach((b) => branches.add(b));
+    });
   });
   return branches;
 }
@@ -203,8 +220,16 @@ function collapseIfAutoExpanded(commitEl) {
 
 function applyFilters() {
   const status = document.getElementById("filter-status");
+
+  const needleKeys = new Set();
+  activeFilters.forEach((tool) => matchKeysFor(tool).forEach((k) => needleKeys.add(k)));
+
   document.querySelectorAll(".chip").forEach((c) => {
-    c.classList.toggle("chip-active", activeFilters.has(c.textContent.trim()));
+    const label = c.textContent.trim();
+    const isSelected = activeFilters.has(label);
+    const isGrouped = !isSelected && matchKeysFor(label).some((k) => needleKeys.has(k));
+    c.classList.toggle("chip-active", isSelected);
+    c.classList.toggle("chip-grouped", isGrouped);
   });
 
   if (!activeFilters.size) {
@@ -227,10 +252,9 @@ function applyFilters() {
     if (target) activateBranch(target);
   }
 
-  const needles = [...activeFilters].map((t) => t.toLowerCase());
   document.querySelectorAll(".commit").forEach((c) => {
-    const tools = c.dataset.tools.split("|");
-    const has = needles.some((n) => tools.includes(n));
+    const keys = c.dataset.matchKeys.split("|");
+    const has = keys.some((k) => needleKeys.has(k));
     c.classList.toggle("dim", !has);
     if (has) {
       expandForFilter(c);

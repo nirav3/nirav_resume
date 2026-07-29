@@ -18,7 +18,7 @@ const EXPERIENCE = [
       "Migrated global compliance reporting (LSEG, ASIC, MAS) to REFIT format, optimizing SQL performance and data pipelines.",
       "Mentored junior engineers on API design, message-based architecture, and cloud deployment practices."
     ],
-    tools: ["C#",".NET", "Angular", "AG Grid", "AWS Lambda", "SNS/SQS", "Apigee", "AWS", "CI/CD", "SQL", "OAuth 2.0", "JWT", "Active Directory", "MCP", "LLMs"]
+    tools: ["C#",".NET", "Angular", "AG Grid", "AWS Lambda", "SNS/SQS", "Apigee", "AWS", "CI/CD", "SQL Server", "PostgreSQL", "OAuth 2.0", "JWT", "Active Directory", "MCP", "LLMs"]
   },
   {
     id: "amzn",
@@ -149,8 +149,8 @@ const TAGS = [
 ];
 
 const SKILLS = [
-  { category: "Languages", items: ["C#", "Java", "Python"] },
-  { category: "Frameworks", items: [".NET Core", "ASP.NET MVC", ".NET Framework", "Spring", "Spring MVC", "Angular"] },
+  { category: "Languages", items: ["C#", "Python"] },
+  { category: "Frameworks", items: [".NET Core", "ASP.NET MVC", ".NET Framework", "Angular"] },
   { category: "Cloud Compute", items: ["AWS EC2", "ECS", "Lambda/Fargate", "EMR", "AWS Glue", "GKE", "Google Cloud Functions"] },
   { category: "Cloud Storage", items: ["S3", "RDS", "Redshift", "Cloud Storage"] },
   { category: "Databases", items: ["PostgreSQL", "SQL Server", "RDS", "DynamoDB"] },
