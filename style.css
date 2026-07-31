@@ -115,7 +115,7 @@ main {
   background: #010409;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 8px 12px;
+  padding: 4px 8px;
   margin: 0 0 14px;
   color: var(--green);
   display: block;
@@ -397,7 +397,7 @@ footer {
 
 /* ---------- Responsive ---------- */
 @media (max-width: 560px) {
-  .hero { flex-direction: column; align-items: flex-start; }
+  .hero { flex-direction: column; align-items: stretch; }
   .commit-msg { font-size: 14.5px; }
   .terminal { font-size: 11.5px; }
 }
