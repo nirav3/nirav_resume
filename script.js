@@ -308,6 +308,42 @@ function initTyped() {
   tick();
 }
 
+function initTerminalDragScroll() {
+  const el = document.querySelector(".terminal");
+  if (!el) return;
+
+  let dragging = false;
+  let pointerId = null;
+  let startX = 0;
+  let startScroll = 0;
+
+  el.addEventListener("pointerdown", (ev) => {
+    dragging = true;
+    pointerId = ev.pointerId;
+    startX = ev.clientX;
+    startScroll = el.scrollLeft;
+    el.classList.add("dragging");
+    el.setPointerCapture(pointerId);
+  });
+
+  el.addEventListener("pointermove", (ev) => {
+    if (!dragging) return;
+    el.scrollLeft = startScroll - (ev.clientX - startX);
+    ev.preventDefault();
+  });
+
+  const stop = (ev) => {
+    if (!dragging) return;
+    dragging = false;
+    el.classList.remove("dragging");
+    if (pointerId !== null && el.hasPointerCapture(pointerId)) {
+      el.releasePointerCapture(pointerId);
+    }
+  };
+  el.addEventListener("pointerup", stop);
+  el.addEventListener("pointercancel", stop);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("count-main").textContent = EXPERIENCE.length;
   document.getElementById("count-projects").textContent = PROJECTS.length;
@@ -320,6 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
   skillBranchMap = buildSkillBranchMap();
   initBranchTabs();
   initTyped();
+  initTerminalDragScroll();
 
   document.getElementById("clear-filter").addEventListener("click", clearFilters);
 });

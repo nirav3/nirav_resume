@@ -122,13 +122,15 @@ main {
   max-width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  touch-action: pan-x;
+  touch-action: none;
   white-space: pre;
   scrollbar-width: thin;
+  cursor: grab;
 }
 .terminal::-webkit-scrollbar { height: 5px; }
 .terminal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
 .terminal::-webkit-scrollbar-track { background: transparent; }
+.terminal.dragging { cursor: grabbing; user-select: none; }
 .prompt { color: var(--blue); margin-right: 6px; }
 .cursor { animation: blink 1s step-end infinite; color: var(--green); }
 @keyframes blink { 50% { opacity: 0; } }
