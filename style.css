@@ -115,14 +115,20 @@ main {
   background: #010409;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 4px 8px;
+  padding: 10px 12px;
   margin: 0 0 14px;
   color: var(--green);
   display: block;
   max-width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
   white-space: pre;
+  scrollbar-width: thin;
 }
+.terminal::-webkit-scrollbar { height: 5px; }
+.terminal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+.terminal::-webkit-scrollbar-track { background: transparent; }
 .prompt { color: var(--blue); margin-right: 6px; }
 .cursor { animation: blink 1s step-end infinite; color: var(--green); }
 @keyframes blink { 50% { opacity: 0; } }
